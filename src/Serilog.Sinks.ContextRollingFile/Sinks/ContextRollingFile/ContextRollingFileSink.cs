@@ -25,7 +25,7 @@ namespace Serilog.Sinks.ContextRollingFile
         readonly bool _shared;
         readonly string[] _protectedTokens = { "Date", "Hour", "HalfHour" };
 
-        ConcurrentDictionary<string, RollingFileSink> _sinks = new ConcurrentDictionary<string, RollingFileSink>();
+        ConcurrentDictionary<string, FileSink> _sinks = new ConcurrentDictionary<string, FileSink>();
 
         /// <summary>Construct a <see cref="RollingFileSink"/>.</summary>
         /// <param name="pathFormat">String describing the location of the log files,
@@ -78,12 +78,11 @@ namespace Serilog.Sinks.ContextRollingFile
             return _pathTemplate.Render(propertiesWithoutProtectedTokens);
         }
 
-        private RollingFileSink CreateSink(string pathFormat)
+        private FileSink CreateSink(string pathFormat)
         {
-            return new RollingFileSink(pathFormat,
+            return new FileSink(pathFormat,
                     _textFormatter, _fileSizeLimitBytes,
-                    _retainedFileCountLimit, _encoding, _buffered,
-                    _shared);
+                    _encoding, _buffered);
         }
 
         public void Dispose()
